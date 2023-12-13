@@ -129,7 +129,17 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 
 	@Override // required
 	public E poll() {
-		return null;
+		assert wellFormed(): "invariant broke in poll";
+		E result = null;
+
+		if (head != rear) {
+			result = data[head];
+			data[head] = null;
+			head = (head + 1) % data.length;
+			version++;
+		}
+		assert wellFormed(): "invariant broke by poll";
+		return result;
 	}
 
 	@Override // required
