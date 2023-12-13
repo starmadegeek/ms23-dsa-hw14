@@ -104,7 +104,27 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 
 	@Override // required
 	public boolean offer(E e) {
-		return false;
+		assert wellFormed(): "invariant failed at start of offer";
+		// if(e == null) throw new NullPointerException();
+
+		// Ensure capacity
+		if ((rear+1)%data.length == head) resize();
+		int insertIndex = binarySearch(e);
+
+		if(inFirstHalf(insertIndex)) {
+			shiftElementsLeft(head, insertIndex);
+			data[(insertIndex - 1 + data.length) % data.length] = e;
+			head = (head - 1 + data.length) % data.length;
+		}
+		else {
+			shiftElementsRight(insertIndex, rear);
+			data[insertIndex] = e;
+			rear = (rear + 1) % data.length;
+		}
+
+		version++;
+		assert wellFormed(): "invariant broke by offer";
+		return true;
 	}
 
 	@Override // required
@@ -116,6 +136,73 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 	public E peek() {
 		assert wellFormed(): "invariant broke in peek";
 		return data[head];
+	}
+
+	/**
+	 * Resize the array to double its current capacity.
+	 */
+	private void resize() {
+		int newSize = data.length * 2;
+		E[] newData = makeArray(newSize);
+
+		// Copy elements to the new array
+		int i = head;
+		int j = 0;
+		while (i != rear) {
+			newData[j++] = data[i];
+			i = (i + 1) % data.length;
+		}
+
+		// Update head, rear and data
+		head = 0;
+		rear = j;
+		data = newData;
+	}
+
+	/**
+	 * Perform binary search to find the index where the new element should be inserted.
+	 *
+	 * @param e The element to be inserted.
+	 * @return The index where the new element should be inserted.
+	 */
+	private int binarySearch(E e) {
+		int low = head;
+		int high = rear >= head ? rear : rear + data.length;
+
+		while (low < high) {
+			int mid = (low + high) >>> 1;
+			if (comparator.compare(data[mid % data.length], e) > 0) {
+				high = mid;
+			} else {
+				low = mid + 1;
+			}
+		}
+
+		return high % data.length;
+	}
+
+	/**
+	 * Shifts elements to the right within the specified range in the underlying data array.
+	 *
+	 * @param start The starting index of the range (inclusive).
+	 * @param end   The ending index of the range (exclusive).
+	 */
+	private void shiftElementsRight(int start, int end) {
+		for (int i = end; i != start; i = (i - 1 + data.length) % data.length) {
+			data[i] = data[(i - 1 + data.length) % data.length];
+		}
+	}
+
+	/**
+	 * Shifts elements to the left within the specified range in the underlying data array.
+	 *
+	 * @param start The starting index of the range (inclusive).
+	 * @param end   The ending index of the range (exclusive).
+	 */
+	private void shiftElementsLeft(int start, int end) {
+		for (int i = start; i != end; i = (i + 1) % data.length) {
+			data[(i - 1 + data.length) % data.length] = data[i];
+		}
 	}
 	
 	private class MyIterator implements Iterator<E> {
