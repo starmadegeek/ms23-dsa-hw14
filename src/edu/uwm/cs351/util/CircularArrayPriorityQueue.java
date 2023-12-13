@@ -263,7 +263,30 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 
 		@Override // implementation
 		public void remove() {
-			Iterator.super.remove();
+			assert wellFormed(): "invariant of iterator failed at start of remove";
+			if (version != colVersion)
+				throw new ConcurrentModificationException("Iterator has been invalidated");
+
+			if (!canRemove)
+				throw new IllegalStateException("remove() can only be called after a call to next()");
+
+			int removeIndex = (current) % data.length;
+
+			if(inFirstHalf(removeIndex)) {
+				shiftElementsRight(head, removeIndex);
+				data[head] = null;
+				head = (head + 1) % data.length;
+				current = (removeIndex+ 1) % data.length;
+			}
+			else {
+				shiftElementsLeft((removeIndex+1) % data.length, rear);
+				rear = (rear - 1 + data.length) % data.length;
+				data[rear] = null;
+			}
+
+			colVersion = ++version;
+			canRemove = false;
+			assert wellFormed(): "invariant of iterator failed at end of remove";
 		}
 	}
 	
