@@ -44,14 +44,24 @@ Friday 10pm deadline.*
 ### Review
 
 Did I correctly anticipate the difficulties?
+Yes,
+I did correctly anticipate the difficulties with the offer method and the implementation of binary search
+which satisfies the equivalent element order rule.
 
 How did the plan go?
+The plan went smoothly
+as I have kept in mind the later challenges I might face in efficieny tests
+and implemented the solutions keeping that in mind which made it easier.
 
 ### Preview
 
 What should I do differently for next week's homework assignment?
+There is no next week homework as per my understanding.
+However, I think I executed the plan and achieved success in a satisfactory way.
 
 Do I need more resources?
+I think more clarification on resizing strategy of the array 
+and the different cases of offer method like in adding a null element were not clear in the homework document.
 
 ## Comments (optional)
 
