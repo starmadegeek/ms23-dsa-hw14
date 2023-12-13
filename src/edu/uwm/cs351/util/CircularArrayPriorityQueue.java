@@ -63,12 +63,37 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 	private boolean inFirstHalf(int mid) {
 		return false; // TODO
 	}
-	
+
 	// TODO: Body of class
 	// "offer" is the most work
 	//
 	// The constructor taking a comparator may be annotated
 	// @SuppressWarnings("unchecked")
+
+	@Override // required
+	public Iterator<E> iterator() {
+		return null;
+	}
+
+	@Override // required
+	public int size() {
+		return 0;
+	}
+
+	@Override // required
+	public boolean offer(E e) {
+		return false;
+	}
+
+	@Override // required
+	public E poll() {
+		return null;
+	}
+
+	@Override // required
+	public E peek() {
+		return null;
+	}
 	
 	private class MyIterator implements Iterator<E> {
 		private int current = head;
@@ -96,9 +121,22 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 			}
 			return true;
 		}
-		
-		// TODO: Body of iterator class.
-		// "remove" is the most work
+
+		// TODO: Body of iterator class. "remove" is the most work
+		@Override // required
+		public boolean hasNext() {
+			return false;
+		}
+
+		@Override // required
+		public E next() {
+			return null;
+		}
+
+		@Override // implementation
+		public void remove() {
+			Iterator.super.remove();
+		}
 	}
 	
 }
