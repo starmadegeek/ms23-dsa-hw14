@@ -245,12 +245,20 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 		// TODO: Body of iterator class. "remove" is the most work
 		@Override // required
 		public boolean hasNext() {
-			return false;
+			assert wellFormed(): "invariant of iterator failed in hasNext";
+			if(version != colVersion) throw new ConcurrentModificationException();
+			if(canRemove && (current + 1) % data.length == rear) return false;
+			return canRemove || current != rear;
 		}
 
 		@Override // required
 		public E next() {
-			return null;
+			if (!hasNext()) throw new NoSuchElementException();
+			if(canRemove) current = (current + 1) % data.length;
+			E nextElement = data[current];
+			canRemove = current != rear;
+			assert wellFormed(): "invariant of iterator failed at end of next";
+			return nextElement;
 		}
 
 		@Override // implementation
