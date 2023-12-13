@@ -92,12 +92,14 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 
 	@Override // required
 	public Iterator<E> iterator() {
-		return null;
+		assert wellFormed(): "invariant failed in iterator()";
+		return new MyIterator();
 	}
 
 	@Override // required
 	public int size() {
-		return 0;
+		assert wellFormed(): "invariant broke in size";
+		return (rear - head + data.length) % data.length;
 	}
 
 	@Override // required
@@ -112,7 +114,8 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 
 	@Override // required
 	public E peek() {
-		return null;
+		assert wellFormed(): "invariant broke in peek";
+		return data[head];
 	}
 	
 	private class MyIterator implements Iterator<E> {
