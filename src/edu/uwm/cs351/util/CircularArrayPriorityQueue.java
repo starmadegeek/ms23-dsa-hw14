@@ -61,14 +61,34 @@ public class CircularArrayPriorityQueue<E> extends AbstractQueue<E> {
 	 * @return whether the mid index is closer to head than to rear
 	 */
 	private boolean inFirstHalf(int mid) {
-		return false; // TODO
+		// TODO
+		int distanceToHead = (mid - head + data.length) % data.length;
+		int distanceToRear = (rear - mid + data.length) % data.length;
+		return distanceToHead < distanceToRear;
 	}
 
 	// TODO: Body of class
 	// "offer" is the most work
 	//
 	// The constructor taking a comparator may be annotated
-	// @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
+	public CircularArrayPriorityQueue(Comparator<E> comparator) {
+		if (comparator == null) {
+			comparator = (Comparator<E>)Comparator.naturalOrder();
+		}
+		this.data = makeArray(INITIAL_CAPACITY);
+		this.version = 1;
+		this.head = this.rear = 0;
+		this.comparator = comparator;
+	}
+
+	/**
+	 * Creates a new CircularArrayPriorityQueue object with a default Comparator<E>.
+	 * The default Comparator<E> assumes that the values implement Comparable<E>.
+	 */
+	public CircularArrayPriorityQueue() {
+		this(null);
+	}
 
 	@Override // required
 	public Iterator<E> iterator() {
